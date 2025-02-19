@@ -195,7 +195,8 @@ project coefficients steps by steps.
 
 ---
 
-1. ![[ex27_long_division.png]]
+1. 
+![](attachments/ex27_long_division.png)  
 $Q(x) = -3x^2-8x-24$  
 $R(x)=-80x+52$  
 
@@ -214,7 +215,7 @@ Projecting the polynomials from $Z$ to $Z_5$ we have:
  $B(x)=2x^4+2x+4$  
  $A(x)=x^7+4x^6+4x^5+x^3+2x^2+2x+3$  
 After that we calculate the long division:  
-![[ex28_long_division.png]]
+![](attachments/ex28_long_division.png)  
 So we have
 $Q(x)=3x^3+2x^2+2x+2$  
 $R(x)=0$  
