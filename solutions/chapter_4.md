@@ -6,14 +6,14 @@ In this chapter, I've learned:
 ### **Ex.33**
 
 ---
-Consider all properties of a communicative group on $Z_5^*$, we have:  
+Consider all properties of a communicative group on $Z^*_5$, we have:  
 
 - **Commutativity**: for all elements $g_1$, $g_2 \in Z_5^*$, we have $g_1\cdot g_2 = g_2\cdot g_1$.  
 - **Associativity**: for all elements  $g_1$, $g_2$, $g_3 \in Z_5^*$, we have
 $g_1\cdot (g_2\cdot g_3) =(g_1\cdot g_2)\cdot g_3$.  
 - **Existence of a neutral element**: $1$ is the neutral element of $Z_5^*$.  
-- **Existence of an inverse**: all elements in $Z_5^{*}$ have inverse.  
-So that $Z_5^{*}$ is a communicative group.  
+- **Existence of an inverse**: all elements in $Z^*_5$ have inverse.  
+So that $Z^*_5$ is a communicative group.  
 
 ### **Ex.34**
 
@@ -28,10 +28,8 @@ The remainder class will have element from $0$ to $n-1$, so the order of $(Z_n, 
 ### **Ex.36**
 
 ---
-We have $5^1=5$, $5^2=4$, $5^3=3$, $5^4=2$, $5^5=1$, $5^6=0$. We can generate all elements of $Z_6^{*}$ by multiply $5$,
-so that $5$ is a generator.  
-Do the same to $2$, we will have the result that can't generate all elements of $Z_6^{*}$ by multiply $2$, so $2$ is not
-a generator.
+We have $5^1=5$, $5^2=4$, $5^3=3$, $5^4=2$, $5^5=1$, $5^6=0$. We can generate all elements of $`Z^*_6`$ by multiply $5$, so that $5$ is a generator.  
+Do the same to $2$, we will have the result that can't generate all elements of $`Z_6^{*}`$ by multiply $2$, so $2$ is not a generator.  
 
 ### **Ex.37**
 
@@ -49,7 +47,7 @@ Consider all properties of a communicative group on $Z_5^{*}[2]$, we have:
 - Commutativity: Same as $Z_5^*$.
 - Associativity: Same as $Z_5^*$.
 - Existence of a neutral element: 1 is the neutral element of $Z_5^*[2]$.
-- Existence if an inverse: since $4\cdot 4=1$ and $1\cdot 1=1$ over $Z_5^{*}[2]$, all elements in $Z_5^{*}[2]$ have inverse.
+- Existence if an inverse: since $4\cdot 4=1$ and $1\cdot 1=1$ over $`Z_5^{*}[2]`$, all elements in $`Z_5^{*}[2]`$ have inverse.
 So that $Z_5^*[2]$ is a communicative group.
 
 ### **Ex.40**
@@ -87,27 +85,27 @@ If $g_2=g_2'$ we have $e(g_1^a, g_2^b)=e(g_1^a,g_2)\cdot e(g_1^a,g_2)\cdot ...=e
 ### **Ex.44**
 
 ---
-I chose set $\{2, 11, 7\}$ from generators of $Z_{13}=\{2,6,7,11\}$. Construct Pedersen Hash as below:
-$H_{\{2,7,11\}}:Z_{12}\times Z_{12} \rightarrow Z^{*}_{13}; (x_1,x_2,x_3)\rightarrow2^{x_1}\cdot7^{x_2}\cdot11^{x_3}$
+I chose set $\lbrace2, 11, 7\rbrace$ from generators of $Z_{13}=\lbrace2,6,7,11\rbrace$. Construct Pedersen Hash as below:  
+$`H_{\lbrace2,7,11\rbrace}:Z_{12}\times Z_{12} \rightarrow Z^{*}_{13}; (x_1,x_2,x_3)\rightarrow2^{x_1}\cdot7^{x_2}\cdot11^{x_3}`$  
 With $(3,7,11)\in Z_{12}$, compute the results: $H(3,7,11)=2$
 
 ### **Ex.45**
 
 ---
-Compose the $SHA256$ with the Pedersen Hash from the previous ex., we have the hash function as below:
-$SHA256\_H_{\{2,7,11\}}:\{0,1\}^{*} \rightarrow Z^{*}_{13}; (s)\rightarrow2^{SHA256(s)_0}\cdot7^{SHA256(s)_1}\cdot11^{SHA256(s)_3}$
+Compose the $SHA256$ with the Pedersen Hash from the previous ex., we have the hash function as below:  
+$SHA256\_H_{\lbrace2,7,11\rbrace}:\lbrace0,1\rbrace^{*} \rightarrow Z^{*}_{13}; (s)\rightarrow2^{SHA256(s)_0}\cdot7^{SHA256(s)_1}\cdot11^{SHA256(s)_3}`$
 
 ### **Ex.46**
 
 ---
-Chose seed $\{a_0, a_1, a_2\}=\{1,2,3,4\}$, generator $2$, the hash compute as below:
+Chose seed $\lbrace a_0, a_1, a_2\rbrace=\lbrace 1,2,3,4\rbrace$, generator $2$, the hash compute as below:  
 $F(1,0,1)=2^{1\cdot2^{1}\cdot3^{0}\cdot4^{1}}=2^8=9$ over $Z_{13}$
 
 ### **Ex.47**
 
 ---
-In the previous ex., we note that $(Z_5,+)$ , $(Z_5^{*}, \cdot)$ are communicative group. Distributivity also holds for all elements. So that $(Z_5, +, \cdot)$ is a field.
-The characteristic of $(Z_5, +, \cdot)$ is 5, because $1+1+1+1+1=5$, plus 1 five time.
+In the previous ex., we note that $(Z_5,+)$ , $(Z_5^{*}, \cdot)$ are communicative group. Distributivity also holds for all elements. So that $(Z_5, +, \cdot)$ is a field.  
+The characteristic of $(Z_5, +, \cdot)$ is 5, because $1+1+1+1+1=5$, plus 1 five time.  
 For each $a\in Z_5$ has only 1 inverse, so that $x=ba^{-1}$ is unique.
 
 ### **Ex.48**
