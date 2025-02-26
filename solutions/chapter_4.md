@@ -12,8 +12,8 @@ Consider all properties of a communicative group on $Z^*_5$, we have:
 - **Associativity**: for all elements  $g_1$, $g_2$, $g_3 \in Z_5^*$, we have
 $g_1\cdot (g_2\cdot g_3) =(g_1\cdot g_2)\cdot g_3$.  
 - **Existence of a neutral element**: $1$ is the neutral element of $Z_5^*$.  
-- **Existence of an inverse**: all elements in $Z^*_5$ have inverse.  
-So that $Z^*_5$ is a communicative group.  
+- **Existence of an inverse**: all elements in $`Z_5^*`$ have inverse.  
+So that $`Z_5^*`$ is a communicative group.  
 
 ### **Ex.34**
 
@@ -59,7 +59,9 @@ Since $6=3\cdot2\cdot1$, we have all subgroup of $Z_6$ as below:
 - $Z_6[2]=\{0, 2\}$
 - $Z_6[3]=\{0,2,4\}$
 - $Z_6[6]=\{0,1,3,2,4,5\}$
+
 $3$ is the large prime order subgroup of $Z_6$, we get the cofactor clearing map $(+)^2: Z_6\rightarrow Z_6[3]$:  
+
 - $0+0=0,$
 - $1+1=2,$
 - $2+2=4,$
@@ -93,7 +95,7 @@ With $(3,7,11)\in Z_{12}$, compute the results: $H(3,7,11)=2$
 
 ---
 Compose the $SHA256$ with the Pedersen Hash from the previous ex., we have the hash function as below:  
-$SHA256\_H_{\lbrace2,7,11\rbrace}:\lbrace0,1\rbrace^{*} \rightarrow Z^{*}_{13}; (s)\rightarrow2^{SHA256(s)_0}\cdot7^{SHA256(s)_1}\cdot11^{SHA256(s)_3}`$
+$`SHA256\_H_{\lbrace2,7,11\rbrace}:\lbrace0,1\rbrace^{*} \rightarrow Z^{*}_{13}; (s)\rightarrow2^{SHA256(s)_0}\cdot7^{SHA256(s)_1}\cdot11^{SHA256(s)_3}`$
 
 ### **Ex.46**
 
