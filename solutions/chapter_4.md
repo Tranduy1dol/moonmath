@@ -3,6 +3,10 @@
 ---
 In this chapter, I've learned:
 
+- Communicative group
+- Field
+- Project Plane
+
 ### **Ex.33**
 
 ---
@@ -28,8 +32,10 @@ The remainder class will have element from $0$ to $n-1$, so the order of $(Z_n, 
 ### **Ex.36**
 
 ---
-We have $5^1=5$, $5^2=4$, $5^3=3$, $5^4=2$, $5^5=1$, $5^6=0$. We can generate all elements of $`Z^*_6`$ by multiply $5$, so that $5$ is a generator.  
-Do the same to $2$, we will have the result that can't generate all elements of $`Z_6^{*}`$ by multiply $2$, so $2$ is not a generator.  
+We have $5^1=5$, $5^2=4$, $5^3=3$, $5^4=2$, $5^5=1$, $5^6=0$. We can generate all elements of $`Z^*_6`$ by multiply $5$,
+so that $5$ is a generator.  
+Do the same to $2$, we will have the result that can't generate all elements of $`Z_6^{*}`$ by multiply $2$, so $2$ is
+not a generator.  
 
 ### **Ex.37**
 
@@ -47,7 +53,8 @@ Consider all properties of a communicative group on $Z_5^{*}[2]$, we have:
 - Commutativity: Same as $Z_5^*$.
 - Associativity: Same as $Z_5^*$.
 - Existence of a neutral element: 1 is the neutral element of $Z_5^*[2]$.
-- Existence if an inverse: since $4\cdot 4=1$ and $1\cdot 1=1$ over $`Z_5^{*}[2]`$, all elements in $`Z_5^{*}[2]`$ have inverse.
+- Existence if an inverse: since $4\cdot 4=1$ and $1\cdot 1=1$ over $`Z_5^{*}[2]`$, all elements in $`Z_5^{*}[2]`$ have
+inverse.
 So that $Z_5^*[2]$ is a communicative group.
 
 ### **Ex.40**
@@ -106,7 +113,8 @@ $F(1,0,1)=2^{1\cdot2^{1}\cdot3^{0}\cdot4^{1}}=2^8=9$ over $Z_{13}$
 ### **Ex.47**
 
 ---
-In the previous ex., we note that $(Z_5,+)$ , $(Z_5^{*}, \cdot)$ are communicative group. Distributivity also holds for all elements. So that $(Z_5, +, \cdot)$ is a field.  
+In the previous ex., we note that $(Z_5,+)$ , $(Z_5^{*}, \cdot)$ are communicative group. Distributivity also holds for
+all elements. So that $(Z_5, +, \cdot)$ is a field.  
 The characteristic of $(Z_5, +, \cdot)$ is 5, because $1+1+1+1+1=5$, plus 1 five time.  
 For each $a\in Z_5$ has only 1 inverse, so that $x=ba^{-1}$ is unique.
 
@@ -184,3 +192,87 @@ Not all elements in $Z_6^{*}$ has inverse, so that $(Z_6,+,\cdot)$ is not a fiel
 ### **Ex.52**
 
 ---
+$\frac{0}{13}=0^6=0, \sqrt{0}=0$.  
+$\frac{1}{13}=1^6=1, \sqrt{1}=\lbrace1,12\rbrace$.  
+$\frac{2}{13}=2^6=-1$.  
+$\frac{3}{13}=3^6=1,\sqrt{3}=\lbrace4,9\rbrace$.  
+$\frac{4}{13}=4^6=1,\sqrt{4}=\lbrace2,11\rbrace$.  
+$\frac{5}{13}=5^6=-1$.  
+$\frac{6}{13}=6^6=-1$.  
+$\frac{7}{13}=7^6=-1$.  
+$\frac{8}{13}=8^6=-1$.  
+$\frac{9}{13}=9^6=1,\sqrt{9}=\lbrace3,10\rbrace$.
+$\frac{10}{13}=10^6=1,\sqrt{10}=\lbrace6,7\rbrace$.  
+$\frac{11}{13}=11^6=-1$.  
+$\frac{12}{13}=12^6=1,\sqrt{12}=\lbrace5,8\rbrace$.
+
+### **Ex.53**
+
+---
+
+```
+[(0, 2), (0, 1), (x + 2, 2*x + 2), (x + 2, x + 1), (2*x + 2, x + 2), (2*x + 2, 2*x + 1), (2, 0), (1, x), (1, 2*x)]
+```
+
+### **Ex.54**
+
+---
+
+$Q(0)=0^2+0+2=2$  
+$Q(1)=1^2+1+2=1$  
+$Q(2)=2^2+2+2=2$  
+So that $Q(x)=x^2+x+2$ is irreducible.  
+Use ```Sage``` for print multiplication table:  
+
+```      *        0       1       2       x   x + 1   x + 2     2*x 2*x + 1 2*x + 2
+       +------------------------------------------------------------------------
+      0|       0       0       0       0       0       0       0       0       0
+      1|       0       1       2       x   x + 1   x + 2     2*x 2*x + 1 2*x + 2
+      2|       0       2       1     2*x 2*x + 2 2*x + 1       x   x + 2   x + 1
+      x|       0       x     2*x 2*x + 1       1   x + 1   x + 2 2*x + 2       2
+  x + 1|       0   x + 1 2*x + 2       1   x + 2     2*x       2       x 2*x + 1
+  x + 2|       0   x + 2 2*x + 1   x + 1     2*x       2 2*x + 2       1       x
+    2*x|       0     2*x       x   x + 2       2 2*x + 2 2*x + 1   x + 1       1
+2*x + 1|       0 2*x + 1   x + 2 2*x + 2       x       1   x + 1       2     2*x
+2*x + 2|       0 2*x + 2   x + 1       2 2*x + 1       x       1     2*x   x + 2
+```
+
+### **Ex.55**
+
+---
+
+$P(0)=0^3+0+1=1$  
+$P(1)=1^3+1+1=3$  
+$P(2)=2^3+2+1=1$  
+$P(3)=3^3+3+1=1$  
+$P(4)=4^3+4+1=4$  
+Use ```Sage``` and see that $4t^2+4t+1$ is inverse of $2t^2+4$, multiple both side of equation we have:  
+$x-(t^2+4t+2)=(2t+3)(4t^2+4t+1)$  
+$x = 3t^3+t^2+3t$
+Reduce this result by apply Euclid Long division, we have  
+$x=t^2+2$
+
+### **Ex.56**
+
+---
+
+$P(0)=0^2+2=2$  
+$P(1)=1^2+2=3$  
+$P(2)=2^2+2=1$  
+$P(3)=3^2+2=1$  
+$P(4)=4^2+2=3$
+
+### **Ex.57**
+
+---
+Use ```Sage``` is the easiest way to provide this output. Also you can do the pen-and-paper method:  
+
+```
+(0 : 0 : 1)
+(0 : 1 : 1)
+(1 : 0 : 1)
+(1 : 1 : 1)
+(0 : 1 : 0)
+(1 : 1 : 0)
+(1 : 0 : 0)
+```
