@@ -195,7 +195,8 @@ project coefficients steps by steps.
 
 ---
 
-1. 
+1.
+
 ![](attachments/ex27_long_division.png)  
 $Q(x) = -3x^2-8x-24$  
 $R(x)=-80x+52$  
