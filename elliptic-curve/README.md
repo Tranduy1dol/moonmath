@@ -1,12 +1,17 @@
 # Chapter 5: Elliptic Curves
 
 ---
+
+## Summary
+
+---
 In this chapter, I've learned:
+
 
 ### **Ex.58** & **Ex.59**
 
 ---
-This two exercises have it own solution in the example.
+These two exercises have their own solution in the example.
 
 ### **Ex.60**
 
@@ -49,15 +54,32 @@ Solve the equation: $x\oplus(9,4)=(5,2)$.
 ### **Ex.64**
 
 ---
-$[1](0,1)+[1](0,1)=[2](0,1)$  
-$[2](0,1)+[2](0,1)=[4](0,1)$  
-$[4](0,1)+[4](0,1)=[8](0,1)$  
-$[8](0,1)+[8](0,1)=[7](0,1)$  
-$[7](0,1)+[7](0,1)=[5](0,1)$  
-$[5](0,1)+[5](0,1)=[1](0,1)$  
-
-$[3],[6],[9]$ is belong to logarithmic order: $[3](0,1) \rightarrow [6](0,1) \rightarrow \mathcal{O}$.
+$$
+\begin{align*}
+[1](0, 1) + [1](0, 1) = [2](0, 1) \\
+[2](0, 1) + [2](0, 1) = [4](0, 1) \\
+[4](0, 1) + [4](0, 1) = [8](0, 1) \\
+[8](0, 1) + [8](0, 1) = [7](0, 1) \\
+[7](0, 1) + [7](0, 1) = [5](0, 1) \\
+[5](0, 1) + [5](0, 1) = [1](0, 1)
+\end{align*}
+$$
+$[3]$, $[6]$, $[9]$ is belonged to logarithmic order. And factorization of 9 is $3\cdot 3$, so $[9]$ has 3 subgroups: 
+- A subgroup of order of 9
+- A subgroup of order of 3 contains $[3](0, 1) $ and $[6](0, 1) $
+- A subgroup of order of 1
 
 ### **Ex.65**
+
+--- 
+I used my code to compute more easily, but something is not right when compute 10 scalar.  
+Here is my result:
+```rust
+[10](5, 11) = (0, 1)
+[10](9, 4) = (4, 0)
+[4](9, 4) = (7, 11)
+```
+
+### **Ex.66**
 
 ---
