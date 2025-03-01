@@ -49,15 +49,27 @@ Solve the equation: $x\oplus(9,4)=(5,2)$.
 ### **Ex.64**
 
 ---
-$[1](0,1)+[1](0,1)=[2](0,1)$  
-$[2](0,1)+[2](0,1)=[4](0,1)$  
-$[4](0,1)+[4](0,1)=[8](0,1)$  
-$[8](0,1)+[8](0,1)=[7](0,1)$  
-$[7](0,1)+[7](0,1)=[5](0,1)$  
-$[5](0,1)+[5](0,1)=[1](0,1)$  
+$\left[1\right](0,1)+\left[1\right](0,1)=\left[2\right](0,1)$  
+$\left[2\right](0,1)+\left[2\right](0,1)=\left[4\right](0,1)$  
+$\left[4\right](0,1)+\left[4\right](0,1)=\left[8\right](0,1)$  
+$\left[8\right](0,1)+\left[8\right](0,1)=\left[7\right](0,1)$  
+$\left[7\right](0,1)+\left[7\right](0,1)=\left[5\right](0,1)$  
+$\left[5\right](0,1)+\left[5\right](0,1)=\left[1\right](0,1)$  
 
-$[3],[6],[9]$ is belong to logarithmic order: $[3](0,1) \rightarrow [6](0,1) \rightarrow \mathcal{O}$.
+$\left[3\right],\left[6\right],\left[9\right]$ is belonged to logarithmic order: $\left[3\right](0,1) \rightarrow \left[6\right](0,1) \rightarrow \mathcal{O}$.
 
 ### **Ex.65**
 
 ---
+$\left[10\right](5,11)=\left[2\times2\times2\right](5,11)+\left[2\right](5,11)$  
+$x'=(\frac{3\cdot5^2+8}{2\cdot11})^2-2\cdot5=7,y'=(\frac{3\cdot5^2+8}{2\cdot11})(5-7)-11=11$  
+$\Rightarrow\left[2\right](5,11)=(7,11)$  
+$x'=(\frac{3\cdot7^2+8}{2\cdot11})^2-2\cdot5=6,y'=(\frac{3\cdot7^2+8}{2\cdot11})(7-6)-11=6$    
+$\Rightarrow\left[4\right](5,11)=\left[2\right](7,11)=(6,6)$  
+$x'=(\frac{3\cdot6^2+8}{2\cdot6})^2-2\cdot6=2,y'=(\frac{3\cdot6^2+8}{2\cdot6})(6-6)-6=7$    
+$\Rightarrow\left[8\right](5,11)=\left[4\right](7,11)=\left[2\right](6,6)=(2,7)$  
+$\left[10\right](5,11)=(2,7)\oplus(7,11)$
+$x_3=(\frac{11-7}{7-2})^2-2-7=1,y'=(\frac{11-7}{7-2})(2-1)-2=7$    
+
+Do the same way for another computation, here is the results:  
+$\left[10\right](9,4)=(4,0), \left[4\right](9,4)=(7,11)$
