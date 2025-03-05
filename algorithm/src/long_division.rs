@@ -29,7 +29,7 @@ pub fn poly_long_division(a: Vec<i64>, b: Vec<i64>) -> anyhow::Result<(Vec<i64>,
 
     let d = b.len() as u64 - 1;
 
-    while p.len() as u64 - 1 >= d {
+    while p.len() as u64 > d {
         let s = p.last().unwrap() / b.last().unwrap();
         q[p.len() - b.len()] = s;
 
