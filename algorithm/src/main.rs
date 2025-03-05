@@ -1,9 +1,9 @@
-mod binary_representation;
-mod chinese_remainder;
-mod extended_euclid;
-mod long_division;
-mod cyclic_group_exponentiation;
-mod utils;
+pub mod binary_representation;
+pub mod chinese_remainder;
+pub mod cyclic_group_exponentiation;
+pub mod extended_euclid;
+pub mod long_division;
+pub mod utils;
 
 fn main() {
     println!("Hello, world!");

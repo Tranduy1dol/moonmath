@@ -1,5 +1,5 @@
 use crate::extended_euclid::extended_euclid;
-fn chinese_remainder_solver(a: Vec<u64>, n: Vec<u64>) -> anyhow::Result<u64> {
+pub fn chinese_remainder_solver(a: Vec<u64>, n: Vec<u64>) -> anyhow::Result<u64> {
     if n.len() != a.len() {
         anyhow::bail!("Length mismatch");
     }
