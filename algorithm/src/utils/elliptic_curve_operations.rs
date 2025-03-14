@@ -3,18 +3,18 @@ use anyhow::anyhow;
 use std::cmp::PartialEq;
 
 #[derive(Debug, Copy, Clone, Eq, PartialEq)]
-struct Point {
+pub struct Point {
     pub x: i64,
     pub y: i64,
 }
 
-enum CurveForm {
+pub enum CurveForm {
     ShortWeierstrass,
     Montgomery,
     TwistedEdwards,
 }
 
-struct EllipticCurve {
+pub struct EllipticCurve {
     form: CurveForm,
     field: Modular,
     a: i64,
