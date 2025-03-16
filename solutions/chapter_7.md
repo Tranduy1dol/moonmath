@@ -36,6 +36,16 @@ statement TINI_JJ {F: F_13} {
 ## **Ex.105**
 ---
 
+```
+statement sqrt {F: F_13} {
+  fn main(y: F) -> (F) {
+    let x;
+    x <== MUL(y, y);
+    return (x);
+  }
+}
+```
+
 ## **Ex.106**
 ---
 
