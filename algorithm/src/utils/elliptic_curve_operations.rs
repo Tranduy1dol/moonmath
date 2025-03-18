@@ -8,6 +8,13 @@ pub struct Point {
     pub y: i64,
 }
 
+#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+pub struct ProjectivePoint {
+    pub x: i64,
+    pub y: i64,
+    pub z: i64,
+}
+
 pub enum CurveForm {
     ShortWeierstrass,
     Montgomery,
@@ -27,9 +34,21 @@ impl Point {
     }
 }
 
+impl ProjectivePoint {
+    pub fn new(x: i64, y: i64, z: i64) -> ProjectivePoint {
+        ProjectivePoint { x, y, z }
+    }
+}
+
 impl PartialEq<Point> for &Point {
     fn eq(&self, other: &Point) -> bool {
         self.x == other.x && self.y == other.y
+    }
+}
+
+impl PartialEq<ProjectivePoint> for ProjectivePoint {
+    fn eq(&self, other: &ProjectivePoint) -> bool {
+        self.x == other.x && self.y == other.y && self.z == other.z
     }
 }
 
@@ -193,6 +212,47 @@ impl EllipticCurve {
                     .unwrap() as i64;
 
                 Ok(Point::new(new_x, new_y))
+            }
+        }
+    }
+
+    pub fn projective_add(&self, point_a: ProjectivePoint, point_b: ProjectivePoint) -> anyhow::Result<ProjectivePoint> {
+        if point_a == ProjectivePoint::new(0, 1, 0) { Ok(point_b) }
+        else if point_b == ProjectivePoint::new(0, 1, 0) { Ok(point_a) } else {
+            let u_1 = point_a.z * point_b.y;
+            let u_2 = point_a.y * point_b.z;
+            let v_1 = point_a.z * point_b.x;
+            let v_2 = point_a.x * point_b.z;
+
+            if v_1 == v_2 {
+                if u_1 != u_2 {
+                    Ok(ProjectivePoint::new(0, 1, 0))
+                } else {
+                    if point_a.y == 0 {
+                        Ok(ProjectivePoint::new(0, 1, 0))
+                    } else {
+                        let w = self.a * point_a.z * point_a.z + 3 * point_a.x * point_a.x;
+                        let s = point_a.y * point_b.z;
+                        let b = point_a.x * point_a.y * s;
+                        let h = w * w - 8 * b;
+
+                        let x = self.field.mul(8, h * s) as i64;
+                        let y = self.field.sub(w * (4 * b - h), 8 * point_a.y * point_a.y * s * s) as i64;
+                        let z = self.field.mul(8, s * s * s) as i64;
+
+                        Ok(ProjectivePoint::new(x, y, z))
+                    }
+                }
+            } else {
+                let u = u_1 - u_2;
+                let v = v_1 - v_2;
+                let w = point_a.z * point_b.z;
+                let a = u * u * w - v * v * v -2 * v * v * v_2;
+
+                let x = self.field.mul(v, a) as i64;
+                let y = self.field.sub(u * (v * v - a), v * v * v * u_2) as i64;
+                let z = self.field.mul(v * v * v, w) as i64;
+                Ok(ProjectivePoint::new(x, y, z))
             }
         }
     }
