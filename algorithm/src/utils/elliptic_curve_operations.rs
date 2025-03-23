@@ -1,15 +1,8 @@
 use crate::utils::modular_operations::Modular;
-use anyhow::anyhow;
 use std::cmp::PartialEq;
 
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
+#[derive(Debug, Copy, Clone, Eq)]
 pub struct Point {
-    pub x: i64,
-    pub y: i64,
-}
-
-#[derive(Debug, Copy, Clone, Eq, PartialEq)]
-pub struct ProjectivePoint {
     pub x: i64,
     pub y: i64,
     pub z: i64,
@@ -29,40 +22,64 @@ pub struct EllipticCurve {
 }
 
 impl Point {
-    pub fn new(x: i64, y: i64) -> Point {
-        Point { x, y }
+    /// Creates a new `ProjectivePoint`.
+    ///
+    /// # Arguments
+    ///
+    /// * `x` - The x-coordinate of the point.
+    /// * `y` - The y-coordinate of the point.
+    /// * `z` - The z-coordinate of the point.
+    ///
+    /// # Returns
+    ///
+    /// A new `ProjectivePoint` with the given coordinates.
+    pub fn new(x: i64, y: i64, z: i64) -> Point {
+        if z == 1 {
+            Point { x, y, z }
+        } else {
+            Point {
+                x: 0,
+                y: 1,
+                z: 0,
+            }
+        }
     }
 }
 
-impl ProjectivePoint {
-    pub fn new(x: i64, y: i64, z: i64) -> ProjectivePoint {
-        ProjectivePoint { x, y, z }
-    }
-}
-
-impl PartialEq<Point> for &Point {
+impl PartialEq<Point> for Point {
     fn eq(&self, other: &Point) -> bool {
-        self.x == other.x && self.y == other.y
-    }
-}
-
-impl PartialEq<ProjectivePoint> for ProjectivePoint {
-    fn eq(&self, other: &ProjectivePoint) -> bool {
         self.x == other.x && self.y == other.y && self.z == other.z
     }
 }
 
 impl EllipticCurve {
+    /// Creates a new `EllipticCurve`.
+    ///
+    /// # Arguments
+    ///
+    /// * `form` - The form of the elliptic curve.
+    /// * `field` - The finite field for operations.
+    /// * `a` - The curve parameter `a`.
+    /// * `b` - The curve parameter `b`.
+    ///
+    /// # Returns
+    ///
+    /// A new `EllipticCurve` with the given parameters.
     pub fn new(form: CurveForm, field: Modular, a: i64, b: i64) -> Self {
         EllipticCurve { form, field, a, b }
     }
 
-    pub fn point_at_infinity(&self) -> Point {
-        Point { x: 0, y: 0 }
-    }
-
-    pub fn is_point_on_curve(&self, point: &Point) -> bool {
-        if point == self.point_at_infinity() {
+    /// Checks if a point is on the elliptic curve.
+    ///
+    /// # Arguments
+    ///
+    /// * `point` - The point to check.
+    ///
+    /// # Returns
+    ///
+    /// `true` if the point is on the curve, `false` otherwise.
+    pub fn is_point_on_curve(&self, point: Point) -> bool {
+        if point.z == 0 {
             return true;
         }
 
@@ -83,197 +100,125 @@ impl EllipticCurve {
         }
     }
 
-    pub fn inverse(&self, point: &Point) -> Option<Point> {
+    /// Computes the inverse of a point on the elliptic curve.
+    ///
+    /// # Arguments
+    ///
+    /// * `point` - The point to invert.
+    ///
+    /// # Returns
+    ///
+    /// An `Option` containing the inverse point if it exists.
+    pub fn inverse(&self, point: Point) -> anyhow::Result<Point> {
         if self.is_point_on_curve(point) {
-            Some(Point {
+            Ok(Point {
                 x: point.x,
-                y: self.field.sub(0, point.y) as i64,
+                y: self.field.neg(point.y),
+                z: point.z,
             })
         } else {
-            None
+            anyhow::bail!("Cannot find inverse of this point")
         }
     }
 
-    pub fn tangent_add(&self, point: &Point) -> anyhow::Result<Point> {
-        if !self.is_point_on_curve(point) {
-            eprintln!("point = {:#?}", point);
-            return Err(anyhow!("Point is not on the curve"));
-        }
+    /// Adds two points on the elliptic curve in projective coordinates.
+    ///
+    /// # Arguments
+    ///
+    /// * `point_a` - The first projective point.
+    /// * `point_b` - The second projective point.
+    ///
+    /// # Returns
+    ///
+    /// A `Result` containing the resulting projective point.
+    pub fn projective_add(
+        &self,
+        point_1: Point,
+        point_2: Point,
+    ) -> anyhow::Result<Point> {
+        let field = self.field;
 
-        match self.form {
-            CurveForm::ShortWeierstrass => {
-                let pattern = self
-                    .field
-                    .div(3 * point.x * point.x + self.a, 2 * point.y)
-                    .unwrap() as i64;
-
-                let new_x = self.field.sub(pattern * pattern, 2 * point.x) as i64;
-
-                let new_y = self.field.sub(pattern * (point.x - new_x), point.y) as i64;
-
-                let result = Point::new(new_x, new_y);
-                Ok(result)
-            }
-            CurveForm::Montgomery => {
-                let pattern = self
-                    .field
-                    .div(3 * point.x * point.x + 2 * self.a + 1, 2 * self.a * point.y)
-                    .unwrap() as i64;
-
-                let new_x = self
-                    .field
-                    .sub(pattern * pattern * self.b, 2 * point.x - self.a)
-                    as i64;
-
-                let new_y = self.field.sub(pattern * (point.x - new_x), point.y) as i64;
-
-                let result = Point::new(new_x, new_y);
-                Ok(result)
-            }
-            CurveForm::TwistedEdwards => {
-                let result = self.chord_add(point, point)?;
-                Ok(result)
-            }
-        }
-    }
-
-    pub fn chord_add(&self, point_a: &Point, point_b: &Point) -> anyhow::Result<Point> {
-        if !self.is_point_on_curve(point_a) || !self.is_point_on_curve(point_b) {
-            return Err(anyhow!("Point is not on the curve"));
-        }
-
-        if point_a == self.point_at_infinity() {
-            return Ok(*point_b);
-        }
-
-        if point_b == self.point_at_infinity() {
-            return Ok(*point_a);
-        }
-
-        match self.form {
-            CurveForm::ShortWeierstrass => {
-                if point_a.x == point_b.x {
-                    if point_a.y == point_b.y {
-                        Err(anyhow!("x_1 and x_2 should not be equal"))
-                    } else {
-                        Ok(self.tangent_add(point_a)?)
-                    }
-                } else {
-                    let pattern = self
-                        .field
-                        .div(point_b.y - point_a.y, point_b.x - point_a.x)
-                        .unwrap() as i64;
-
-                    let new_x = self.field.sub(pattern * pattern, point_a.x + point_b.x) as i64;
-
-                    let new_y = self.field.sub(pattern * (point_a.x - point_b.x), point_a.y) as i64;
-
-                    Ok(Point::new(new_x, new_y))
-                }
-            }
-            CurveForm::Montgomery => {
-                if point_a.x == point_b.x {
-                    if point_a.y == point_b.y {
-                        Err(anyhow!("x_1 and x_2 should not be equal"))
-                    } else {
-                        Ok(self.tangent_add(point_a)?)
-                    }
-                } else {
-                    let pattern = self
-                        .field
-                        .div(point_b.y - point_a.y, point_b.x - point_a.x)
-                        .unwrap() as i64;
-
-                    let new_x = self
-                        .field
-                        .sub(pattern * pattern * self.b, point_a.x + point_b.x + self.a)
-                        as i64;
-
-                    let new_y = self.field.sub(pattern * (point_a.x - new_x), point_b.y) as i64;
-
-                    Ok(Point::new(new_x, new_y))
-                }
-            }
-            CurveForm::TwistedEdwards => {
-                let new_x = self
-                    .field
-                    .div(
-                        point_a.x * point_b.y + point_b.x * point_a.y,
-                        1 + self.b * point_a.x * point_b.y * point_b.x * point_a.y,
-                    )
-                    .unwrap() as i64;
-
-                let new_y = self
-                    .field
-                    .div(
-                        point_b.y * point_a.y - self.a * point_a.x * point_b.x,
-                        1 - self.b * point_a.y * point_a.x * point_b.y,
-                    )
-                    .unwrap() as i64;
-
-                Ok(Point::new(new_x, new_y))
-            }
-        }
-    }
-
-    pub fn projective_add(&self, point_a: ProjectivePoint, point_b: ProjectivePoint) -> anyhow::Result<ProjectivePoint> {
-        if point_a == ProjectivePoint::new(0, 1, 0) { Ok(point_b) }
-        else if point_b == ProjectivePoint::new(0, 1, 0) { Ok(point_a) } else {
-            let u_1 = point_a.z * point_b.y;
-            let u_2 = point_a.y * point_b.z;
-            let v_1 = point_a.z * point_b.x;
-            let v_2 = point_a.x * point_b.z;
+        if point_1 == Point::new(0, 1, 0) {
+            Ok(point_2)
+        } else if point_2 == Point::new(0, 1, 0) {
+            Ok(point_1)
+        } else {
+            let u_1 = point_1.z * point_2.y;
+            let u_2 = point_1.y * point_2.z;
+            let v_1 = point_1.z * point_2.x;
+            let v_2 = point_1.x * point_2.z;
 
             if v_1 == v_2 {
                 if u_1 != u_2 {
-                    Ok(ProjectivePoint::new(0, 1, 0))
+                    Ok(Point::new(0, 1, 0))
+                } else if point_1.y == 0 {
+                    Ok(Point::new(0, 1, 0))
                 } else {
-                    if point_a.y == 0 {
-                        Ok(ProjectivePoint::new(0, 1, 0))
-                    } else {
-                        let w = self.a * point_a.z * point_a.z + 3 * point_a.x * point_a.x;
-                        let s = point_a.y * point_b.z;
-                        let b = point_a.x * point_a.y * s;
-                        let h = w * w - 8 * b;
+                    let w = self.a * point_1.z * point_1.z + 3 * point_1.x * point_1.x;
+                    let s = point_1.y * point_1.z;
+                    let b = point_1.x * point_1.y * s;
+                    let h = w * w - 8 * b;
 
-                        let x = self.field.mul(8, h * s) as i64;
-                        let y = self.field.sub(w * (4 * b - h), 8 * point_a.y * point_a.y * s * s) as i64;
-                        let z = self.field.mul(8, s * s * s) as i64;
+                    let x = 2 * h * s;
+                    let y = w * (4 * b - h) - 8 * point_1.y * point_1.y * s * s;
+                    let z = 8 * s * s * s;
 
-                        Ok(ProjectivePoint::new(x, y, z))
-                    }
+                    Ok(Point::new(
+                        field.div(x, z)?,
+                        field.div(y, z)?,
+                        field.div(z, z)?,
+                    ))
                 }
             } else {
                 let u = u_1 - u_2;
                 let v = v_1 - v_2;
-                let w = point_a.z * point_b.z;
-                let a = u * u * w - v * v * v -2 * v * v * v_2;
+                let w = point_1.z * point_2.z;
+                let a = u * u * w - v * v * v - 2 * v * v * v_2;
 
-                let x = self.field.mul(v, a) as i64;
-                let y = self.field.sub(u * (v * v - a), v * v * v * u_2) as i64;
-                let z = self.field.mul(v * v * v, w) as i64;
-                Ok(ProjectivePoint::new(x, y, z))
+                let x = v * a;
+                let y = u * (v * v * v_2 - a) - v * v * v * u_2;
+                let z = v * v * v * w;
+
+                Ok(Point::new(
+                    self.field.div(x, z)?,
+                    self.field.div(y, z)?,
+                    self.field.div(z, z)?,
+                ))
             }
         }
     }
-
-    pub fn esm(&self, point: &Point, mut scalar: i64) -> anyhow::Result<Point> {
+    
+    /// Performs scalar multiplication on the elliptic curve.
+    ///
+    /// # Arguments
+    ///
+    /// * `point` - The point to be multiplied.
+    /// * `scalar` - The scalar value to multiply the point by.
+    ///
+    /// # Returns
+    ///
+    /// A `Result` containing the resulting point after scalar multiplication.
+    ///
+    /// # Errors
+    ///
+    /// Returns an error if the point is not on the curve.
+    pub fn esm(&self, point: Point, mut scalar: i64) -> anyhow::Result<Point> {
         if !self.is_point_on_curve(point) {
-            return Err(anyhow!("Point is not on the curve"));
+            anyhow::bail!("Point is not on the curve");
         }
 
         if scalar == 0 {
-            return Ok(self.point_at_infinity());
+            return Ok(Point::new(0, 1, 0));
         }
 
-        let mut result = self.point_at_infinity();
-        let mut base = *point;
+        let mut result = Point::new(0, 1, 0);
+        let mut base = point;
 
         while scalar > 0 {
             if scalar & 1 == 1 {
-                result = self.chord_add(&result, &base)?;
+                result = self.projective_add(result, base)?;
             }
-            base = self.tangent_add(&base)?;
+            base = self.projective_add(base, base)?;
             scalar >>= 1;
         }
 
@@ -283,32 +228,30 @@ impl EllipticCurve {
 
 mod test {
     use crate::utils::elliptic_curve_operations::{CurveForm, EllipticCurve, Point};
+    use crate::utils::elliptic_curve_operations::CurveForm::ShortWeierstrass;
     use crate::utils::modular_operations::Modular;
-
-    #[test]
-    fn test_curve_chord_add_operations() {
-        let e = EllipticCurve::new(CurveForm::ShortWeierstrass, Modular(5), 1, 1);
-        let expected_result = Point::new(2, 1);
-        let result = e.chord_add(&Point::new(0, 1), &Point::new(4, 2)).unwrap();
-        assert_eq!(result, expected_result);
-    }
-
-    #[test]
-    fn test_curve_tangent_operations() {
-        let e = EllipticCurve::new(CurveForm::ShortWeierstrass, Modular(5), 1, 1);
-        let expected_result = Point::new(3, 4);
-        let result = e.tangent_add(&Point::new(4, 2)).unwrap();
-        assert_eq!(result, expected_result);
-    }
 
     #[test]
     fn test_scalar_multiplication() {
         let e = EllipticCurve::new(CurveForm::ShortWeierstrass, Modular(13), 8, 8);
-        let point_1 = Point::new(5, 11);
-        assert_eq!(e.esm(&point_1, 10).unwrap(), Point::new(0, 0));
-        let point_2 = Point::new(9, 4);
-        assert_eq!(e.esm(&point_2, 10).unwrap(), Point::new(4, 0));
-        let point_3 = Point::new(9, 4);
-        assert_eq!(e.esm(&point_3, 4).unwrap(), Point::new(7, 11));
+        assert_eq!(e.esm(Point::new(5, 11, 1), 10).unwrap(), Point::new(0, 1, 0));
+        assert_eq!(e.esm(Point::new(9, 4, 1), 10).unwrap(), Point::new(4, 0, 1));
+        assert_eq!(e.esm(Point::new(9, 4, 1), 4).unwrap(), Point::new(7, 11, 1));
+    }
+
+    #[test]
+    fn test_projective_add() {
+        let e = EllipticCurve::new(ShortWeierstrass, Modular(5), 1, 1);
+        assert_eq!(e.projective_add(Point::new(0, 1, 0), Point::new(4, 3, 1)).unwrap(), Point::new(4, 3, 1));
+        assert_eq!(e.projective_add(Point::new(0, 3, 0), Point::new(3, 1, 2)).unwrap(), Point::new(3, 1, 2));
+        assert_eq!(e.projective_add(e.inverse(Point::new(0, 4, 1)).unwrap() , Point::new(3, 4, 1)).unwrap(), Point::new(3, 1, 1));
+        assert_eq!(e.projective_add(Point::new(4, 3, 1), Point::new(4, 2, 1)).unwrap(), Point::new(0, 1, 0));
+    }
+
+    #[test]
+    fn test_inverse_point() {
+        let e = EllipticCurve::new(ShortWeierstrass, Modular(5), 1, 1);
+        assert_eq!(e.inverse(Point::new(0, 4, 1)).unwrap(), Point::new(0, 1, 1));
     }
 }
+

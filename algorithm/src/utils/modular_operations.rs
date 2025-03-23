@@ -1,30 +1,94 @@
+use crate::extended_gcd::extended_gcd;
+
 #[derive(Debug, Copy, Clone)]
 pub struct Modular(pub i64);
 
 impl Modular {
-    pub fn add(&self, a: i64, b: i64) -> u64 {
-        (((a % self.0 + b % self.0) % self.0 + self.0) % self.0) as u64
+    /// Adds two numbers in the given modular field.
+    ///
+    /// # Arguments
+    ///
+    /// * `a` - The first number.
+    /// * `b` - The second number.
+    ///
+    /// # Returns
+    ///
+    /// The result of (a + b) % modulus.
+    pub fn add(&self, a: i64, b: i64) -> i64 {
+        ((a + b) % self.0 + self.0) % self.0
     }
 
-    pub fn sub(&self, a: i64, b: i64) -> u64 {
-        (((a % self.0 - b % self.0) % self.0 + self.0) % self.0) as u64
+    /// Subtracts two numbers in the given modular field.
+    ///
+    /// # Arguments
+    ///
+    /// * `a` - The first number.
+    /// * `b` - The second number.
+    ///
+    /// # Returns
+    ///
+    /// The result of (a - b) % modulus.
+    pub fn sub(&self, a: i64, b: i64) -> i64 {
+        self.add(a, self.neg(b))
     }
 
-    pub fn mul(&self, a: i64, b: i64) -> u64 {
-        (((a % self.0 * b % self.0) % self.0 + self.0) % self.0) as u64
+    /// Multiplies two numbers in the given modular field.
+    ///
+    /// # Arguments
+    ///
+    /// * `a` - The first number.
+    /// * `b` - The second number.
+    ///
+    /// # Returns
+    ///
+    /// The result of (a * b) % modulus.
+    pub fn mul(&self, a: i64, b: i64) -> i64 {
+        ((a * b) % self.0 + self.0) % self.0
     }
 
-    pub fn inv(&self, a: i64) -> Option<u64> {
-        for i in 1..self.0 {
-            if (a * i) % self.0 == 1 {
-                return Some(i as u64);
-            }
+    /// Negates a number in the given modular field.
+    ///
+    /// # Arguments
+    ///
+    /// * `a` - The number to be negated.
+    ///
+    /// # Returns
+    ///
+    /// The result of -a % modulus.
+    pub fn neg(&self, a: i64) -> i64 {
+        (((self.0 - a) % self.0) + self.0) % self.0
+    }
+
+    /// Computes the modular inverse of a number.
+    ///
+    /// # Arguments
+    ///
+    /// * `a` - The number to be inverted.
+    ///
+    /// # Returns
+    ///
+    /// The modular inverse of `a`.
+    pub fn inv(&self, a: i64) -> i64 {
+        let (inv, _, _) = extended_gcd(a, self.0);
+        self.add(inv, self.0)
+    }
+
+    /// Divides two numbers in the given modular field.
+    ///
+    /// # Arguments
+    ///
+    /// * `a` - The dividend.
+    /// * `b` - The divisor.
+    ///
+    /// # Returns
+    ///
+    /// The result of (a / b) % modulus.
+    pub fn div(&self, a: i64, b: i64) -> anyhow::Result<i64> {
+        if b == 0 {
+            anyhow::bail!("Division by zero");
+        } else {
+            Ok(self.mul(a, self.inv(b)))
         }
-        None
-    }
-
-    pub fn div(&self, a: i64, b: i64) -> Option<u64> {
-        Modular::inv(self, b).map(|inv_b| Modular::mul(self, a, inv_b as i64))
     }
 }
 
@@ -34,7 +98,7 @@ mod test {
     #[test]
     fn test_modular() {
         let modular_5 = Modular(5);
-        assert_eq!(modular_5.inv(2).unwrap(), 3);
+        assert_eq!(modular_5.inv(2), 3);
         assert_eq!(modular_5.add(10, 4), 4);
         assert_eq!(modular_5.sub(0, 6), 4);
         assert_eq!(modular_5.mul(10, 4), 0);
