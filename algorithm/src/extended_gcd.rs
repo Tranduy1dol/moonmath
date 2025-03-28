@@ -2,8 +2,8 @@
 ///
 /// # Arguments
 ///
-/// * `a` - The first integer.
-/// * `b` - The second integer.
+/// * `x` - The first integer.
+/// * `y` - The second integer.
 ///
 /// # Returns
 ///

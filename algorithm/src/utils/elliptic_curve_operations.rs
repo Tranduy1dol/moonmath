@@ -90,8 +90,7 @@ impl EllipticCurve {
             }
             CurveForm::Montgomery => {
                 (self.b * point.y * point.y) % self.field.0
-                    == (point.x * point.x * point.x + self.a * point.x + point.x % self.field.0)
-                        % self.field.0
+                    == (point.x * point.x * point.x + self.a * point.x * point.x + point.x) % self.field.0
             }
             CurveForm::TwistedEdwards => {
                 (self.a * point.x * point.x) % self.field.0
