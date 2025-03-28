@@ -10,8 +10,35 @@ use crate::utils::modular_operations::Modular;
 ///
 /// # Returns
 ///
-/// A vector of `i64` coefficients representing the interpolated polynomial.
-pub fn lagrange_interpolation(points: Vec<Point>, field: Modular) -> anyhow::Result<Vec<i64>> {
+/// Performs Lagrange interpolation over a set of points within a finite field.
+///
+/// Given a collection of points (each with an x and y coordinate), this function computes the coefficients
+/// of the polynomial that passes through all the points using Lagrange's formula. All arithmetic operations
+/// are carried out in the finite field specified by the provided `Modular` instance.
+///
+/// # Errors
+///
+/// Returns an error if a division operation in the finite field arithmetic fails.
+///
+/// # Examples
+///
+/// ```
+/// // Initialize a finite field with modulus 13.
+/// let field = Modular::new(13);
+///
+/// // Define points for interpolation.
+/// let points = vec![
+///     Point { x: 0, y: 1 },
+///     Point { x: 1, y: 3 },
+///     Point { x: 2, y: 5 },
+/// ];
+///
+/// // Compute the polynomial coefficients (constant term first).
+/// let poly_coeffs = lagrange_interpolation(points, field).unwrap();
+///
+/// // Validate the results (replace expected values with the actual coefficients).
+/// assert_eq!(poly_coeffs, vec![expected_constant, expected_linear, expected_quadratic]);
+/// ```pub fn lagrange_interpolation(points: Vec<Point>, field: Modular) -> anyhow::Result<Vec<i64>> {
     let mut result = vec![0; points.len()];
 
     for i in 0..points.len() {
