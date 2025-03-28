@@ -7,8 +7,21 @@
 ///
 /// # Returns
 ///
-/// A tuple containing the greatest common divisor and the coefficients of Bézout's identity.
-pub fn extended_gcd(x: i64, y: i64) -> (i64, i64, i64) {
+/// Computes the extended greatest common divisor (GCD) of two integers.
+/// 
+/// Given integers `x` and `y`, returns a tuple `(a, b, g)` where `a` and `b` are the Bézout coefficients satisfying
+/// the equation `a * x + b * y = g`, and `g` is the greatest common divisor of `x` and `y`.
+/// 
+/// # Examples
+/// 
+/// ```
+/// let (a, b, g) = extended_gcd(12, 5);
+/// // Verify Bézout's identity
+/// assert_eq!(a * 12 + b * 5, g);
+///
+/// let (a, b, g) = extended_gcd(45, 10);
+/// assert_eq!(a * 45 + b * 10, g);
+/// ```pub fn extended_gcd(x: i64, y: i64) -> (i64, i64, i64) {
     let (mut old_r, mut r) = (x, y);
     let (mut old_s, mut s) = (1, 0);
     let (mut old_t, mut t) = (0, 1);

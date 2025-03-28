@@ -7,8 +7,23 @@
 ///
 /// # Returns
 ///
-/// A tuple containing the quotient and the remainder.
-pub fn long_division(dividend: i64, divisor: i64) -> anyhow::Result<(i64, u64)> {
+/// Performs long division on an integer dividend using the specified divisor.
+///
+/// This function mimics the manual long division process by processing each digit of the dividend
+/// to compute the quotient and remainder. If the divisor is zero, the function returns an error.
+///
+/// # Examples
+///
+/// ```
+/// # use anyhow::Result;
+/// # fn main() -> Result<()> {
+/// let (quotient, remainder) = long_division(12345, 123)?;
+/// // For 12345 / 123, the expected quotient is 100 and the remainder is 45.
+/// assert_eq!(quotient, 100);
+/// assert_eq!(remainder, 45);
+/// # Ok(())
+/// # }
+/// ```pub fn long_division(dividend: i64, divisor: i64) -> anyhow::Result<(i64, u64)> {
     if divisor == 0 {
         // Return an error if divisor is zero
         anyhow::bail!("division by zero");
@@ -46,8 +61,34 @@ pub fn long_division(dividend: i64, divisor: i64) -> anyhow::Result<(i64, u64)> 
 ///
 /// # Returns
 ///
-/// A tuple containing the quotient and the remainder polynomials.
-pub fn poly_long_division(a: Vec<i64>, b: Vec<i64>) -> anyhow::Result<(Vec<i64>, Vec<i64>)> {
+/// Performs polynomial long division on two polynomials represented as vectors of coefficients.
+/// 
+/// Given a dividend polynomial `a` and a divisor polynomial `b`, where the coefficients are
+/// stored in increasing order (with the last element as the highest-degree term), this function
+/// computes the quotient and remainder polynomials such that:
+/// 
+/// ```text
+/// dividend = (divisor * quotient) + remainder
+/// ```
+/// 
+/// The division is performed by iteratively determining the leading quotient term—computed by dividing
+/// the last element of the current dividend by the last element of the divisor—subtracting the corresponding
+/// multiple of the divisor from the dividend, and updating the quotient polynomial. This process continues
+/// until the degree of the remaining dividend is less than the degree of the divisor.
+/// 
+/// # Examples
+/// 
+/// ```
+/// // Divide the polynomial x² - 3x + 2 by x - 2.
+/// // Represented in increasing order, the dividend is [2, -3, 1] (i.e. 2 - 3x + x²)
+/// // and the divisor is [-2, 1] (i.e. -2 + x).
+/// // The expected quotient is [-1, 1] (i.e. -1 + x) and the expected remainder is [0].
+/// let dividend = vec![2, -3, 1];
+/// let divisor = vec![-2, 1];
+/// let (quotient, remainder) = poly_long_division(dividend, divisor).unwrap();
+/// assert_eq!(quotient, vec![-1, 1]);
+/// assert_eq!(remainder, vec![0]);
+/// ```pub fn poly_long_division(a: Vec<i64>, b: Vec<i64>) -> anyhow::Result<(Vec<i64>, Vec<i64>)> {
     let mut p = a.clone(); // Clone the dividend polynomial
     let mut q = vec![0i64; a.len() - b.len() + 1]; // Initialize the quotient polynomial
 
