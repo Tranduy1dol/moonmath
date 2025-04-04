@@ -1,4 +1,4 @@
-use crate::extended_gcd::extended_gcd;
+use utils::extended_gcd::extended_gcd;
 
 /// Solves the system of congruences using the Chinese Remainder Theorem.
 ///

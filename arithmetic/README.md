@@ -1,10 +1,17 @@
 # Chapter 3: Arithmetic
 
 ---
-In this chapter, I have learned:
+
+## Summary
+
+---
+This chapter introduced:
 
 - Modulo calculation
-- Polynomial
+- Polynomial calculation. Implementation [here](./src/long_division.rs).
+- Extended Euclidean algorithm. Implementation [here](../utils/src/extended_gcd.rs).
+- Chinese Remainder Theorem. Implementation [here](./src/chinese_remainder.rs).
+- Lagrange Interpolation. Implementation [here](./src/lagrange_interpolation.rs).
 
 ### **Ex.1**
 
@@ -46,9 +53,13 @@ $30030=2 \cdot 3 \cdot 5 \cdot 7 \cdot 11\cdot13$
 
 ---
 
+See my implementation [here](./src/long_division.rs).
+
 ### **Ex.7**
 
 ---
+
+See my implementation [here](./src/binary_representation.rs).
 
 ### **Ex.8**
 
@@ -241,7 +252,7 @@ $l_2(x)=\frac{x-x_1}{x_2-x_1}\cdot\frac{x-x_0}{x_2-x_0}\cdot\frac{x-x_3}{x_2-x_3
 $l_3(x)=\frac{x-x_1}{x_3-x_1}\cdot\frac{x-x_2}{x_3-x_2}\cdot\frac{x-x_0}{x_3-x_0}=x^3+2x^2+2x$  
 $P(x)=y_0\cdot l_0+y_1\cdot l_1+y_2\cdot l_2+y_3\cdot l_3=4x^3+3x^2+4x$
 
-Note that in each steps, I projected coefficients from $Z$ to $Z_6$.
+Note that in each step, I projected coefficients from $Z$ to $Z_6$.
 
 ### **Ex.32**
 
