@@ -3,18 +3,25 @@
 version = 4
 
 [[package]]
-name = "algorithm"
+name = "algebra"
 version = "0.1.0"
 dependencies = [
- "anyhow",
  "sha2",
 ]
 
 [[package]]
 name = "anyhow"
-version = "1.0.96"
+version = "1.0.97"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b964d184e89d9b6b67dd2715bc8e74cf3107fb2b529990c90cf517326150bf4"
+checksum = "dcfed56ad506cb2c684a14971b8861fdc3baaaae314b9e5f9bb532cbe3ba7a4f"
+
+[[package]]
+name = "arithmetic"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "utils",
+]
 
 [[package]]
 name = "block-buffer"
@@ -61,6 +68,10 @@ dependencies = [
 ]
 
 [[package]]
+name = "elliptic-curve"
+version = "0.1.0"
+
+[[package]]
 name = "generic-array"
 version = "0.14.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -88,10 +99,21 @@ dependencies = [
 ]
 
 [[package]]
+name = "statements"
+version = "0.1.0"
+
+[[package]]
 name = "typenum"
 version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1dccffe3ce07af9386bfd29e80c0ab1a8205a2fc34e4bcd40364df902cfa8f3f"
+
+[[package]]
+name = "utils"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
 
 [[package]]
 name = "version_check"

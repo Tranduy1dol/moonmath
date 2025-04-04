@@ -1,5 +1,6 @@
-use crate::utils::modular_operations::Modular;
 use std::cmp::PartialEq;
+
+use crate::modular_operations::Modular;
 
 #[derive(Debug, Copy, Clone, Eq)]
 pub struct Point {
@@ -37,11 +38,7 @@ impl Point {
         if z == 1 {
             Point { x, y, z }
         } else {
-            Point {
-                x: 0,
-                y: 1,
-                z: 0,
-            }
+            Point { x: 0, y: 1, z: 0 }
         }
     }
 }
@@ -90,7 +87,8 @@ impl EllipticCurve {
             }
             CurveForm::Montgomery => {
                 (self.b * point.y * point.y) % self.field.0
-                    == (point.x * point.x * point.x + self.a * point.x * point.x + point.x) % self.field.0
+                    == (point.x * point.x * point.x + self.a * point.x * point.x + point.x)
+                        % self.field.0
             }
             CurveForm::TwistedEdwards => {
                 (self.a * point.x * point.x) % self.field.0
@@ -130,11 +128,7 @@ impl EllipticCurve {
     /// # Returns
     ///
     /// A `Result` containing the resulting projective point.
-    pub fn projective_add(
-        &self,
-        point_1: Point,
-        point_2: Point,
-    ) -> anyhow::Result<Point> {
+    pub fn projective_add(&self, point_1: Point, point_2: Point) -> anyhow::Result<Point> {
         let field = self.field;
 
         if point_1 == Point::new(0, 1, 0) {
@@ -186,7 +180,7 @@ impl EllipticCurve {
             }
         }
     }
-    
+
     /// Performs scalar multiplication on the elliptic curve.
     ///
     /// # Arguments
@@ -226,14 +220,17 @@ impl EllipticCurve {
 }
 
 mod test {
-    use crate::utils::elliptic_curve_operations::{CurveForm, EllipticCurve, Point};
-    use crate::utils::elliptic_curve_operations::CurveForm::ShortWeierstrass;
-    use crate::utils::modular_operations::Modular;
+    use super::*;
+    use crate::elliptic_curve_operations::CurveForm::ShortWeierstrass;
+    use crate::modular_operations::Modular;
 
     #[test]
     fn test_scalar_multiplication() {
-        let e = EllipticCurve::new(CurveForm::ShortWeierstrass, Modular(13), 8, 8);
-        assert_eq!(e.esm(Point::new(5, 11, 1), 10).unwrap(), Point::new(0, 1, 0));
+        let e = EllipticCurve::new(ShortWeierstrass, Modular(13), 8, 8);
+        assert_eq!(
+            e.esm(Point::new(5, 11, 1), 10).unwrap(),
+            Point::new(0, 1, 0)
+        );
         assert_eq!(e.esm(Point::new(9, 4, 1), 10).unwrap(), Point::new(4, 0, 1));
         assert_eq!(e.esm(Point::new(9, 4, 1), 4).unwrap(), Point::new(7, 11, 1));
     }
@@ -241,10 +238,26 @@ mod test {
     #[test]
     fn test_projective_add() {
         let e = EllipticCurve::new(ShortWeierstrass, Modular(5), 1, 1);
-        assert_eq!(e.projective_add(Point::new(0, 1, 0), Point::new(4, 3, 1)).unwrap(), Point::new(4, 3, 1));
-        assert_eq!(e.projective_add(Point::new(0, 3, 0), Point::new(3, 1, 2)).unwrap(), Point::new(3, 1, 2));
-        assert_eq!(e.projective_add(e.inverse(Point::new(0, 4, 1)).unwrap() , Point::new(3, 4, 1)).unwrap(), Point::new(3, 1, 1));
-        assert_eq!(e.projective_add(Point::new(4, 3, 1), Point::new(4, 2, 1)).unwrap(), Point::new(0, 1, 0));
+        assert_eq!(
+            e.projective_add(Point::new(0, 1, 0), Point::new(4, 3, 1))
+                .unwrap(),
+            Point::new(4, 3, 1)
+        );
+        assert_eq!(
+            e.projective_add(Point::new(0, 3, 0), Point::new(3, 1, 2))
+                .unwrap(),
+            Point::new(3, 1, 2)
+        );
+        assert_eq!(
+            e.projective_add(e.inverse(Point::new(0, 4, 1)).unwrap(), Point::new(3, 4, 1))
+                .unwrap(),
+            Point::new(3, 1, 1)
+        );
+        assert_eq!(
+            e.projective_add(Point::new(4, 3, 1), Point::new(4, 2, 1))
+                .unwrap(),
+            Point::new(0, 1, 0)
+        );
     }
 
     #[test]
@@ -253,4 +266,3 @@ mod test {
         assert_eq!(e.inverse(Point::new(0, 4, 1)).unwrap(), Point::new(0, 1, 1));
     }
 }
-

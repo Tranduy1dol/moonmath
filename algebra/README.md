@@ -1,11 +1,24 @@
 # Chapter 4: Algebra
 
 ---
-In this chapter, I've learned:
 
-- Communicative group
-- Field
-- Project Plane
+## Summary
+
+---
+This chapter introduced:
+
+- **Communicative group**
+  - Finite group and its attributes: Order, Generator, etc.
+  - Cyclic group and Cyclic group exponentiation(implementation [here](src/cyclic_group_exponentiation.rs))
+  - Factor group
+  - Pairings
+  - Cryptographic group: DLP (Discrete Logarithm Problem), CDHP (Computational Diffie-Hellman Problem), DDH-secure 
+(The decisional Diffie-Hellman assumption)
+- **Communicative Ring**
+  - Hash into Arithmetic Modular (implementation [here](src/hash_to_zn.rs))
+- **Field**
+  - Prime field and Prime Extension field
+- **Project Plane**
 
 ### **Ex.33**
 
@@ -44,6 +57,7 @@ not a generator.
 ### **Ex.38**
 
 ---
+See my Efficient Scalar Multiplication in [here](src/efficient_scalar_multiplication.rs).
 
 ### **Ex.39**
 
@@ -102,7 +116,8 @@ With $(3,7,11)\in Z_{12}$, compute the results: $H(3,7,11)=2$
 
 ---
 Compose the $SHA256$ with the Pedersen Hash from the previous ex., we have the hash function as below:  
-$`SHA256\_H_{\lbrace2,7,11\rbrace}:\lbrace0,1\rbrace^{*} \rightarrow Z^{*}_{13}; (s)\rightarrow2^{SHA256(s)_0}\cdot7^{SHA256(s)_1}\cdot11^{SHA256(s)_3}`$
+$`SHA256\_H_{\lbrace2,7,11\rbrace}:\lbrace0,1\rbrace^{*} \rightarrow Z^{*}_{13}; 
+(s)\rightarrow2^{SHA256(s)_0}\cdot7^{SHA256(s)_1}\cdot11^{SHA256(s)_3}`$
 
 ### **Ex.46**
 

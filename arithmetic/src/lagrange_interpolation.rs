@@ -1,5 +1,5 @@
-use crate::utils::elliptic_curve_operations::Point;
-use crate::utils::modular_operations::Modular;
+use utils::elliptic_curve_operations::Point;
+use utils::modular_operations::Modular;
 
 /// Performs Lagrange interpolation on a set of points over a given field.
 ///
@@ -35,19 +35,16 @@ pub fn lagrange_interpolation(points: Vec<Point>, field: Modular) -> anyhow::Res
             for k in (1..points.len()).rev() {
                 term[k] += term[k - 1];
                 term[k - 1] = field.mul(term[k - 1], field.neg(points[j].x));
-
             }
         }
 
         for j in 0..points.len() {
             result[j] = field.add(result[j], term[j]);
         }
-
     }
 
     Ok(result)
 }
-
 
 #[cfg(test)]
 mod tests {

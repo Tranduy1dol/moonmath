@@ -42,7 +42,7 @@ mod test {
         let result = binary_representation(0).unwrap();
         assert_eq!(result, "0".to_string());
     }
-    
+
     #[test]
     fn test_binary_representation_large_number() {
         let result = binary_representation(255).unwrap();
