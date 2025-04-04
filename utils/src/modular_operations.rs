@@ -93,7 +93,7 @@ impl Modular {
 }
 
 mod test {
-    use crate::utils::modular_operations::Modular;
+    use crate::modular_operations::Modular;
 
     #[test]
     fn test_modular() {
