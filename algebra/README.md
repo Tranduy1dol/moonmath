@@ -116,7 +116,8 @@ With $(3,7,11)\in Z_{12}$, compute the results: $H(3,7,11)=2$
 
 ---
 Compose the $SHA256$ with the Pedersen Hash from the previous ex., we have the hash function as below:  
-$`SHA256\_H_{\lbrace2,7,11\rbrace}:\lbrace0,1\rbrace^{*} \rightarrow Z^{*}_{13}; (s)\rightarrow2^{SHA256(s)_0}\cdot7^{SHA256(s)_1}\cdot11^{SHA256(s)_3}`$
+$`SHA256\_H_{\lbrace2,7,11\rbrace}:\lbrace0,1\rbrace^{*} \rightarrow Z^{*}_{13}; 
+(s)\rightarrow2^{SHA256(s)_0}\cdot7^{SHA256(s)_1}\cdot11^{SHA256(s)_3}`$
 
 ### **Ex.46**
 

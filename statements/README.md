@@ -32,12 +32,15 @@ false & else
 \end{cases}
 $$
 
-By solving this equation in a normal way, I got the solution $x=8$ is a constructive proof, and $R_{exercise1}(\langle8\rangle)=true$ verify this proof.
+By solving this equation in a normal way, I got the solution $x=8$ is a constructive proof, and 
+$R_{exercise1}(\langle8\rangle)=true$ verify this proof.
 
 ### **Ex.97**
 
 ---
-Solving the equation $3x+3=0$ in $`\mathbb{Z}_6`$ , we have the solutions $\langle1\rangle$ and $\langle5\rangle$. Because the decision function require $n=1$ so we have 2 proofs, and $R_{exercise1}(\langle1\rangle)=true$ and $R_{exercise1}(\langle5\rangle)=true$ verify these proof.
+Solving the equation $3x+3=0$ in $`\mathbb{Z}_6`$ , we have the solutions $\langle1\rangle$ and $\langle5\rangle$. 
+Because the decision function require $n=1$ so we have 2 proofs, and $R_{exercise1}(\langle1\rangle)=true$ and 
+$R_{exercise1}(\langle5\rangle)=true$ verify these proof.
 
 ### **Ex.98**
 
@@ -60,12 +63,16 @@ $$
 (i, w)
 \mapsto
 \begin{cases}
-true & (\langle i_1, i_2 \rangle) \in L_{tiny-jj} \ & \text{ and } &(\langle i_3, i_4 \rangle) \in L_{tiny-jj} \ & \text{ and } &(w_1, w_2) = \left( \frac {i_1i_4 + i_2i_3} {1 + 8i_1i_3i_2i_4} , \frac {i_2i_4 - 3i_1i_3} {1 - 8i_1i_3i_2i_4} \right) \\
+true & (\langle i_1, i_2 \rangle) \in L_{tiny-jj} \ & \text{ and } &(\langle i_3, i_4 \rangle) \in L_{tiny-jj} \ 
+& \text{ and } &(w_1, w_2) = \left( \frac {i_1i_4 + i_2i_3} {1 + 8i_1i_3i_2i_4} , 
+\frac {i_2i_4 - 3i_1i_3} {1 - 8i_1i_3i_2i_4} \right) \\
 false & else
 \end{cases}
 $$
 
-To get the constructive proof that verifiable, choose 2 points on curve as instance and compute their sum as witness. In the other side, choose 1 point outside the curve and 1 point on curve, we will have 1 instance that can't provide a proof.
+To get the constructive proof that verifiable, choose 2 points on curve as instance and compute their sum as witness. 
+In the other side, choose 1 point outside the curve and 1 point on curve, we will have 1 instance that can't provide a 
+proof.
 
 ### **Ex.100**
 

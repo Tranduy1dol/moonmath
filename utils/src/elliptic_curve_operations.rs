@@ -1,5 +1,6 @@
-use crate::modular_operations::Modular;
 use std::cmp::PartialEq;
+
+use crate::modular_operations::Modular;
 
 #[derive(Debug, Copy, Clone, Eq)]
 pub struct Point {
