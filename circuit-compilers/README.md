@@ -1,9 +1,13 @@
 # Chapter 7: Circuit Compiler
 ---
-In this chapter, I've learned:
+
+## Summary
+---
+
+This chapter introduced:
 - 
 
-## **Ex.103**
+### **Ex.103**
 ---
 
 ![](attachments/ex103_brain_compile.png)
@@ -12,7 +16,7 @@ In this brain-compile, ```out_1``` and ```out_2``` compute as follows:
 - $1 = 3 * in_2$
 - $out_2 = in_2$
 
-## **Ex.104**
+### **Ex.104**
 ---
 
 The tini_jubjub curve is compute as follows:  

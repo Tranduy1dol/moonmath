@@ -1,6 +1,6 @@
 [workspace]
 resolver = "2"
-members = [ "algebra","arithmetic", "elliptic-curve", "statements", "utils"]
+members = [ "algebra","arithmetic", "circuit-compilers", "elliptic-curve", "statements", "utils"]
 
 [workspace.dependencies]
 anyhow = "1.0.97"
