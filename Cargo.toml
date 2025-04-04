@@ -1,3 +1,8 @@
 [workspace]
 resolver = "2"
-members = ["arithmetic"]
+members = [ "algebra","arithmetic", "elliptic-curve", "statements", "utils"]
+
+[workspace.dependencies]
+anyhow = "1.0.97"
+sha2 = "0.10.8"
+utils = { path = "utils" }
