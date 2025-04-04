@@ -1,8 +1,19 @@
-
 # Chapter 6: Statements
 
 ---
-In this chapter, I've learned:
+
+## Summary
+
+---
+This chapter introduced:
+- **Formal Language**
+  - Decision function
+  - Instance and Witness
+  - Modularity
+- **Statement Representation**
+  - Rank-1 Quadratic Constraint Systems
+  - Algebraic Circuits
+  - Quadratic Arithmetic Programs
 
 ### **Ex.96**
 
