@@ -54,6 +54,7 @@ Solve the equation: $x\oplus(9,4)=(5,2)$.
 ### **Ex.64**
 
 ---
+
 $$
 \begin{align*}
 [1](0, 1) + [1](0, 1) = [2](0, 1) \\
@@ -64,6 +65,7 @@ $$
 [5](0, 1) + [5](0, 1) = [1](0, 1)
 \end{align*}
 $$
+
 $[3]$, $[6]$, $[9]$ is belonged to logarithmic order. And factorization of 9 is $3\cdot 3$, so $[9]$ has 3 subgroups: 
 - A subgroup of order of 9
 - A subgroup of order of 3 contains $[3](0, 1) $ and $[6](0, 1) $
