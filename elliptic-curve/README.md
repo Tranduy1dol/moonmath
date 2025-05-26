@@ -74,8 +74,7 @@ $[3]$, $[6]$, $[9]$ is belonged to logarithmic order. And factorization of 9 is 
 ### **Ex.65**
 
 --- 
-I used my code to compute more easily, but something is not right when compute 10 scalar.  
-Here is my result:
+I used my code to compute more easily.Here is my result:
 ```rust
 [10](5, 11) = (0, 1)
 [10](9, 4) = (4, 0)
@@ -83,5 +82,36 @@ Here is my result:
 ```
 
 ### **Ex.66**
+
+---
+This exercise is already solved in the example.
+
+### **Ex.67**
+
+---
+
+See my code [here](./src/lib.rs) to know how I get the result.  
+```rust
+Logarithm order: [
+    Point { x: 7, y: 11, z: 1 }, 
+    Point { x: 8, y: 5, z: 1 }, 
+    Point { x: 8, y: 8, z: 1 }, 
+    Point { x: 7, y: 2, z: 1 }, 
+    Point { x: 0, y: 1, z: 0 }]
+```
+
+### **Ex.68**
+
+---
+
+See my code [here](./src/lib.rs) to know how I get the result.
+```rust
+[0, 1, 0] + [4, 3, 1] = Ok(Point { x: 4, y: 3, z: 1 })
+[0, 3, 0] + [3, 1, 2] = Ok(Point { x: 0, y: 1, z: 0 })
+-[0, 4, 1] + [3, 4, 1] = Ok(Point { x: 3, y: 1, z: 1 })
+[4, 3, 1] + [4, 2, 1] = Ok(Point { x: 0, y: 1, z: 0 })
+```
+
+### **Ex.69**
 
 ---
