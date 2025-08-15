@@ -41,6 +41,10 @@ impl Point {
             Point { x: 0, y: 1, z: 0 }
         }
     }
+    
+    pub fn is_infinity(&self) -> bool {
+        self.x == 0 && self.y == 1 && self.z == 0
+    }
 }
 
 impl PartialEq<Point> for Point {
@@ -131,9 +135,9 @@ impl EllipticCurve {
     pub fn projective_add(&self, point_1: Point, point_2: Point) -> anyhow::Result<Point> {
         let field = self.field;
 
-        if point_1 == Point::new(0, 1, 0) {
+        if point_1.is_infinity() {
             Ok(point_2)
-        } else if point_2 == Point::new(0, 1, 0) {
+        } else if point_2.is_infinity() {
             Ok(point_1)
         } else {
             let u_1 = point_1.z * point_2.y;
