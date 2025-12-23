@@ -1,3 +1,15 @@
-\.idea
-\.obsidian
-\target
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints
+
+# Rust
+/target
+Cargo.lock
+
+# IDE
+.idea/
+.vscode/
+
+# Misc
+*.swp
+*.DS_Store

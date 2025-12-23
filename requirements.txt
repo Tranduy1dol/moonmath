@@ -1,0 +1,3 @@
+# Python dependencies for notebook validation
+nbformat>=5.10.0
+jupyter-client>=8.0.0

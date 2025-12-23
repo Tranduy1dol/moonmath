@@ -1,0 +1,277 @@
+name: Validate Notebooks
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - 'notebooks/**'
+      - '.github/workflows/notebooks.yml'
+  pull_request:
+    branches: [main, master]
+    paths:
+      - 'notebooks/**'
+      - '.github/workflows/notebooks.yml'
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate Jupyter Notebooks
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install validation tools
+        run: |
+          pip install --upgrade pip
+          pip install nbformat jupyter-client
+
+      - name: Validate notebook JSON structure
+        run: |
+          echo "🔍 Validating notebook JSON structure..."
+          python << 'EOF'
+          import sys
+          import json
+          import nbformat
+          from pathlib import Path
+
+          notebooks = list(Path('notebooks').glob('*.ipynb'))
+          errors = []
+
+          for nb_path in notebooks:
+              print(f"  Checking {nb_path}...")
+              try:
+                  # Validate JSON structure
+                  with open(nb_path, 'r', encoding='utf-8') as f:
+                      content = json.load(f)
+                  
+                  # Validate notebook format
+                  nb = nbformat.read(nb_path, as_version=4)
+                  
+                  # Basic structure checks
+                  if 'cells' not in content:
+                      errors.append(f"{nb_path}: Missing 'cells' field")
+                  if 'metadata' not in content:
+                      errors.append(f"{nb_path}: Missing 'metadata' field")
+                  
+                  print(f"    ✅ {len(nb.cells)} cells found")
+                  
+              except json.JSONDecodeError as e:
+                  errors.append(f"{nb_path}: Invalid JSON - {e}")
+              except Exception as e:
+                  errors.append(f"{nb_path}: {e}")
+
+          if errors:
+              print("\n❌ Validation failed:")
+              for error in errors:
+                  print(f"  - {error}")
+              sys.exit(1)
+          else:
+              print(f"\n✅ All {len(notebooks)} notebooks are valid!")
+          EOF
+
+      - name: Check for common issues
+        run: |
+          echo "🔍 Checking for common notebook issues..."
+          python << 'EOF'
+          import json
+          from pathlib import Path
+
+          notebooks = list(Path('notebooks').glob('*.ipynb'))
+          warnings = []
+
+          for nb_path in notebooks:
+              with open(nb_path, 'r', encoding='utf-8') as f:
+                  nb = json.load(f)
+              
+              # Check for execution count (indicates notebook was run)
+              cells_with_output = 0
+              empty_cells = 0
+              
+              for i, cell in enumerate(nb.get('cells', [])):
+                  if cell.get('cell_type') == 'code':
+                      if cell.get('execution_count') is not None:
+                          cells_with_output += 1
+                      source = ''.join(cell.get('source', []))
+                      if not source.strip():
+                          empty_cells += 1
+              
+              # Check kernel specification
+              kernel = nb.get('metadata', {}).get('kernelspec', {})
+              if not kernel:
+                  warnings.append(f"{nb_path}: No kernel specification found")
+              
+              if empty_cells > 0:
+                  warnings.append(f"{nb_path}: {empty_cells} empty code cell(s)")
+              
+              print(f"  {nb_path}: {cells_with_output} executed cells, kernel: {kernel.get('name', 'unknown')}")
+
+          if warnings:
+              print("\n⚠️  Warnings:")
+              for warning in warnings:
+                  print(f"  - {warning}")
+          
+          print("\n✅ Check completed!")
+          EOF
+
+      - name: Verify notebook metadata consistency
+        run: |
+          echo "🔍 Checking metadata consistency..."
+          python << 'EOF'
+          import json
+          from pathlib import Path
+
+          notebooks = list(Path('notebooks').glob('*.ipynb'))
+          kernel_info = {}
+
+          for nb_path in notebooks:
+              with open(nb_path, 'r', encoding='utf-8') as f:
+                  nb = json.load(f)
+              
+              kernel = nb.get('metadata', {}).get('kernelspec', {}).get('name', 'unknown')
+              language = nb.get('metadata', {}).get('kernelspec', {}).get('language', 'unknown')
+              
+              key = f"{kernel} ({language})"
+              if key not in kernel_info:
+                  kernel_info[key] = []
+              kernel_info[key].append(str(nb_path))
+
+          print("📊 Kernel usage summary:")
+          for kernel, files in kernel_info.items():
+              print(f"  {kernel}: {len(files)} notebook(s)")
+          
+          if len(kernel_info) > 1:
+              print("\n⚠️  Multiple kernels detected - ensure this is intentional")
+          
+          print("\n✅ Metadata check completed!")
+          EOF
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-action@stable
+        with:
+          components: rustfmt
+
+      - name: Validate Rust syntax in code cells
+        run: |
+          echo "🦀 Validating Rust syntax in notebook code cells..."
+          python << 'EOF'
+          import json
+          import subprocess
+          import tempfile
+          import sys
+          from pathlib import Path
+
+          notebooks = list(Path('notebooks').glob('*.ipynb'))
+          errors = []
+          total_cells = 0
+          valid_cells = 0
+
+          for nb_path in notebooks:
+              with open(nb_path, 'r', encoding='utf-8') as f:
+                  nb = json.load(f)
+              
+              # Check if this is a Rust notebook
+              kernel = nb.get('metadata', {}).get('kernelspec', {}).get('language', '')
+              if kernel.lower() != 'rust':
+                  print(f"  ⏭️  Skipping {nb_path} (not a Rust notebook)")
+                  continue
+              
+              print(f"  📓 Checking {nb_path}...")
+              
+              for i, cell in enumerate(nb.get('cells', [])):
+                  if cell.get('cell_type') != 'code':
+                      continue
+                  
+                  source = cell.get('source', [])
+                  if isinstance(source, list):
+                      code = ''.join(source)
+                  else:
+                      code = source
+                  
+                  # Skip empty cells
+                  if not code.strip():
+                      continue
+                  
+                  # Skip cells that are evcxr commands (start with :)
+                  if code.strip().startswith(':'):
+                      continue
+                  
+                  total_cells += 1
+                  
+                  # Wrap code in a function for syntax checking
+                  # This handles both expressions and statements
+                  wrapped_code = f"fn __check__() {{\n{code}\n}}"
+                  
+                  with tempfile.NamedTemporaryFile(mode='w', suffix='.rs', delete=False) as f:
+                      f.write(wrapped_code)
+                      temp_path = f.name
+                  
+                  try:
+                      result = subprocess.run(
+                          ['rustfmt', '--check', temp_path],
+                          capture_output=True,
+                          text=True,
+                          timeout=10
+                      )
+                      
+                      # rustfmt returns 0 if file is formatted, 1 if not
+                      # We only care about parse errors (exit code > 1 or specific error messages)
+                      if result.returncode > 1 or 'error: ' in result.stderr:
+                          # Try without wrapper for top-level items
+                          with open(temp_path, 'w') as f:
+                              f.write(code)
+                          
+                          result2 = subprocess.run(
+                              ['rustfmt', '--check', temp_path],
+                              capture_output=True,
+                              text=True,
+                              timeout=10
+                          )
+                          
+                          if result2.returncode > 1 or 'error: ' in result2.stderr:
+                              errors.append({
+                                  'notebook': str(nb_path),
+                                  'cell': i + 1,
+                                  'error': result2.stderr or result.stderr,
+                                  'code_preview': code[:100] + '...' if len(code) > 100 else code
+                              })
+                          else:
+                              valid_cells += 1
+                      else:
+                          valid_cells += 1
+                          
+                  except subprocess.TimeoutExpired:
+                      errors.append({
+                          'notebook': str(nb_path),
+                          'cell': i + 1,
+                          'error': 'Timeout during syntax check',
+                          'code_preview': code[:100] + '...' if len(code) > 100 else code
+                      })
+                  except Exception as e:
+                      errors.append({
+                          'notebook': str(nb_path),
+                          'cell': i + 1,
+                          'error': str(e),
+                          'code_preview': code[:100] + '...' if len(code) > 100 else code
+                      })
+                  finally:
+                      Path(temp_path).unlink(missing_ok=True)
+
+          print(f"\n📊 Summary: {valid_cells}/{total_cells} code cells validated")
+
+          if errors:
+              print(f"\n❌ Found {len(errors)} syntax error(s):")
+              for err in errors:
+                  print(f"\n  📓 {err['notebook']} - Cell {err['cell']}")
+                  print(f"  📝 Code: {err['code_preview']}")
+                  print(f"  ⚠️  Error: {err['error'][:200]}")
+              sys.exit(1)
+          else:
+              print("\n✅ All Rust code cells have valid syntax!")
+          EOF
